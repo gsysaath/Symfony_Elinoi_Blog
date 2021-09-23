@@ -1,0 +1,5 @@
+app\Entity\Article:
+  article_{1..100}:
+  title: <sentence(4)>
+  content: <text()>
+  author: "@author_*"

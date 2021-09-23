@@ -1,0 +1,4 @@
+src\Entity\Author:
+  author_{1..100}:
+    firstname: <name()>
+    lastname: <name()>
