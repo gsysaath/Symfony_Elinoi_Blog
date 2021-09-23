@@ -11,7 +11,6 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ApiResource(
   *  normalizationContext={"groups"={"article:read"}},
-  *  denormalizationContext={"groups"={"article:write"}},
   *  collectionOperations={
   *      "get",
   *      "post"={"normalization_context"={"groups"={"article:collection:read"}}}
@@ -36,19 +35,19 @@ class Article
     /**
      * @ORM\ManyToOne(targetEntity=Author::class, inversedBy="articles_id")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"article:read", "article:write", "article:collection:read"})
+     * @Groups({"article:read", "article:collection:read"})
      */
     private $author_id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"article:read", "article:write", "article:collection:read", "author:collection:read"})
+     * @Groups({"article:read", "article:collection:read", "author:collection:read"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"article:collection:read", "article:write"})
+     * @Groups({"article:collection:read"})
      */
     private $content;
 
