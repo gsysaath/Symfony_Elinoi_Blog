@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Repository\ArticleRepository;
@@ -13,11 +14,13 @@ use Doctrine\ORM\Mapping as ORM;
   *  normalizationContext={"groups"={"article:read"}},
   *  collectionOperations={
   *      "get",
-  *      "post"={"normalization_context"={"groups"={"article:collection:read"}}}
+  *      "post"={"normalization_context"={"groups"={"article:collection:read"}}},
+  *      "post"={"validation_group"={ {"default","postValidation"} }}
   *  },
   *  itemOperations={
   *                  "get"={"normalization_context"={"groups"={"article:collection:read"}}},
   *                  "put"={"normalization_context"={"groups"={"article:collection:read"}}},
+  *                  "put"={"validation_group"={ {"default","putValidation"} }},
   *                  "delete"
   *  }
  * )
@@ -35,18 +38,31 @@ class Article
     /**
      * @ORM\ManyToOne(targetEntity=Author::class, inversedBy="articles_id")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\Valid(groups={"postValidation","putValidation"})
      * @Groups({"article:read", "article:collection:read"})
      */
     private $author_id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(
+     *     min = 10,
+     *     max = 100,
+     *     groups={"postValidation", "putValidation"}
+     * )
+     * @Assert\NotBlank(groups={"postValidation","putValidation"})
      * @Groups({"article:read", "article:collection:read", "author:collection:read"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * * @Assert\Length(
+     *     min = 100,
+     *     groups={"postValidation", "putValidation"}
+     * )
+     * @Assert\NotNull(groups={"postValidation","putValidation"})
+     * @Assert\NotBlank(groups={"postValidation","putValidation"})
      * @Groups({"article:collection:read"})
      */
     private $content;

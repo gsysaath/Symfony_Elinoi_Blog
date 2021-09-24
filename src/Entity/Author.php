@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use App\Repository\AuthorRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -16,7 +17,8 @@ use Doctrine\ORM\Mapping as ORM;
   *  denormalizationContext={"groups"={"author:write"}},
   *  collectionOperations={
   *      "get",
-  *      "post"={"normalization_context"={"groups"={"author:collection:read"}}}
+  *      "post"={"normalization_context"={"groups"={"author:collection:read"}}},
+  *      "post"={"validation_group"={ {"default","postValidation"} }}
   *  },
   *  itemOperations={
   *                  "get"={"normalization_context"={"groups"={"author:collection:read"}}},
@@ -36,12 +38,22 @@ class Author
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(
+     *     max = 255,
+     *     groups={"postValidation"}
+     * )
+     * @Assert\NotBlank(groups={"postValidation"})
      * @Groups({"author:read", "author:write", "author:collection:read","article:read","article:collection:read"})
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Length(
+     *     max = 255,
+     *     groups={"postValidation"}
+     * )
+     * @Assert\NotBlank(groups={"postValidation"})
      * @Groups({"author:read", "author:write", "author:collection:read", "article:collection:read"})
      */
     private $lastname;
